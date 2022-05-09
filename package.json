@@ -1,10 +1,12 @@
 {
   "name": "coffeezone-back-end",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Projeto Integrador I e Internet I 2022.1",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "create-migration": "npx sequelize-cli migration:generate",
+    "migrate": "npx sequelize-cli db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

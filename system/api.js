@@ -1,5 +1,6 @@
 const path = require('path')
 const express = require('express')
+const glob = require('fast-glob');
 
 module.exports = class API {
     constructor() {
@@ -33,35 +34,21 @@ module.exports = class API {
     }
 
     setDB() {
-        // Require the databse module
-        const { Sequelize } = require('sequelize');
+        // Require the main database module
+        const { sequelize } = require('./modules/db/models')
 
-        // Create the connection string for Sequelize
-        const conStr = {
-            database: process.env.DB_NAME,
-            username: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            logging: false,
-            dialect: 'postgres',
-        }
+        // Require and set the database functions
+        this.db = new Object()
+        glob.sync(['**/repository/*.repository.js', '!node_modules'], { cwd: process.cwd() })
+            .forEach(file => {
+                const Repository = require(process.cwd() + "/" + file)
+                const repository = new Repository()
+                this.db[repository.name] = repository.functions
+            })
 
-        // Add SSL configurations only if in production
-        if (process.env.DEPLOY == 'production') {
-            conStr['dialectOptions'] = {
-                ssl: {
-                    require: true,
-                    rejectUnauthorized: false
-                }
-            }
-        }
+        // Authenticate the database
+        sequelize.authenticate()
 
-        // Create the Sequelize instance
-        const db = new Sequelize(conStr);
-
-        // Set the database instance in the main app
-        this.db = db
         this.log.start('DB')
     }
 
@@ -95,8 +82,6 @@ module.exports = class API {
     }
 
     setRoutes() {
-        const glob = require('fast-glob');
-
         // Get all the routes files
         var routes = glob.sync(['**/routes/*.js', '!node_modules', '!public', '!views', '!modules'])
 
@@ -105,7 +90,7 @@ module.exports = class API {
 
         // Loop through all the routes files and get the paths and the routers
         routes.forEach(r => {
-            const route = require(process.cwd()+ "/" + r)
+            const route = require(process.cwd() + "/" + r)
             const router = new route(this)
 
             paths.push(router.path);
