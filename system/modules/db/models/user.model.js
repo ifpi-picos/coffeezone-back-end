@@ -3,20 +3,19 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
+    class user extends Model {
         static associate(models) {
-            // Define association here
         }
     }
 
-    User.init({
+    user.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        cardId: {
-            type: DataTypes.INTEGER,
+        cardid: {
+            type: DataTypes.STRING(10),
             allowNull: true,
             unique: true
         },
@@ -49,12 +48,13 @@ module.exports = (sequelize, DataTypes) => {
         linkedin: {
             type: DataTypes.STRING(255),
             allowNull: true
-        }
+        },
     }, {
         sequelize,
-        modelName: 'User',
-        paranoid: false
+        modelName: 'user',
+        paranoid: false,
+        timestamps: false
     })
 
-    return User
+    return user
 }

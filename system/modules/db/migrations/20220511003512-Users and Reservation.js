@@ -9,8 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      cardId: {
-        type: Sequelize.INTEGER,
+      cardid: {
+        type: Sequelize.STRING(10),
         allowNull: true,
         unique: true
       },
@@ -44,6 +44,10 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: true
       },
+    }, {
+      modelName: 'user',
+      paranoid: false,
+      timestamps: false
     })
 
     await queryInterface.createTable('reservations', {
@@ -53,7 +57,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      userid: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -73,6 +77,10 @@ module.exports = {
         type: Sequelize.TEXT(2048),
         allowNull: true
       }
+    }, {
+      modelName: 'reservation',
+      paranoid: false,
+      timestamps: false
     })
   },
 

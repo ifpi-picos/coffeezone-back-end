@@ -1,9 +1,9 @@
-const { User } = require('../models')
+const { user } = require('../models')
 
 module.exports = class UserRepository {
     constructor(){
         return{
-            name: "User",
+            name: "user",
             functions: {
                 create: this.create,
                 getByEmail: this.getByEmail,
@@ -13,23 +13,23 @@ module.exports = class UserRepository {
             }
         }
     }
-    async create(user) {
-        return await User.create(user)
+    async create(newUser) {
+        return await user.create(newUser)
     }
 
     async getByEmail(email) {
-        return await User.findOne({ where: { email } })
+        return await user.findOne({ where: { email } })
     }
 
     async getById(id) {
-        return await User.findByPk(id)
+        return await user.findByPk(id)
     }
 
     async updateById(userId, user) {
-        return await User.update(user, { where: { id: userId } })
+        return await user.update(user, { where: { id: userId } })
     }
 
     async deleteById(userId) {
-        return await User.destroy({ where: { id: userId } })
+        return await user.destroy({ where: { id: userId } })
     }
 }

@@ -3,17 +3,16 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-    class Reservation extends Model {
+    class reservation extends Model {
         static associate(models) {
-            // Define association here
-            Reservation.hasOne(models.User, {
+            reservation.hasOne(models.user, {
                 foreignKey: 'id',
                 as: 'userId'
             })
         }
     }
 
-    Reservation.init({
+    reservation.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -35,11 +34,12 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         sequelize,
-        modelName: 'Reservation',
-        paranoid: false
+        modelName: 'reservation',
+        paranoid: false,
+        timestamps: false
     })
     
-    return Reservation
+    return reservation
 }
 
 
