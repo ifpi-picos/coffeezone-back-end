@@ -5,10 +5,10 @@ module.exports = class AuthRoute {
 
         routes.post("/login", async (req, res) => {
             try {
-                let user = await app.db.user.getByEmail(req.body.email)
-                user = user.dataValues
+                if (req.body.password && req.body.email) {
+                    let user = await app.db.user.getByEmail(req.body.email)
+                    user = user.dataValues
 
-                if (req.body.password || req.body.email) {
                     if (user) {
                         if (app.services.auth.comparePassword(req.body.password, user.password)) {
                             const token = app.services.auth.createToken(user)

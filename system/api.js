@@ -51,6 +51,13 @@ module.exports = class API {
         this.app.use(express.json());
 
         if (process.env.DEPLOY === 'production') {
+            const cors = require('cors')
+
+            this.app.use(cors({
+                origin: `${process.env.CORS_ORIGIN}`,
+                optionsSuccessStatus: 200
+            }))
+
             this.app.use((req, res, next) => {
                 if (req.header('x-forwarded-proto') !== 'https') {
                     res.redirect(`https://${req.header('host')}${req.url}`)

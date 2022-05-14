@@ -3,16 +3,17 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-    class reservations extends Model {
+    class authorizations extends Model {
         static associate(models) {
-            reservations.hasOne(models.users, {
+            authorizations.hasOne(models.reservations, {
                 foreignKey: 'id',
-                as: 'userId'
+                as: 'reservationId',
+                allowNull: false
             })
         }
     }
 
-    reservations.init({
+    authorizations.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -20,26 +21,26 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        equipment: {
-            type: DataTypes.TEXT(2048),
-            allowNull: true
-        },
-        time: {
-            type: DataTypes.DATE,
+        reservationid: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
-        reason: {
+        status: {
             type: DataTypes.TEXT(2048),
-            allowNull: true
+            allowNull: false
+        },
+        laststatustime: {
+            type: DataTypes.DATE,
+            allowNull: false
         }
     }, {
         sequelize,
-        modelName: 'reservations',
+        modelName: 'authorizations',
         paranoid: false,
         timestamps: false
     })
     
-    return reservations
+    return authorizations
 }
 
 
