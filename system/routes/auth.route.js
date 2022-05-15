@@ -1,18 +1,38 @@
 module.exports = class AuthRoute {
     constructor(app) {
-        // Set a new instance of a express router
         const { Router } = require('express');
         const routes = Router()
 
-        // Set the services used on this route
-        const AuthServices = require('../services/auth.service')
-        const services = new AuthServices(app)
+        routes.post("/login", async (req, res) => {
+            try {
+                if (req.body.password && req.body.email) {
+                    let user = await app.db.user.getByEmail(req.body.email)
 
-        // Set the routes
-        routes.get("/login", (req, res) => {
+                    if (user) {
+                        user = user.dataValues
+                        if (app.services.auth.comparePassword(req.body.password, user.password)) {
+                            const token = app.services.auth.createToken(user)
+
+                            res.status(200).json({ token: token })
+                        }
+                        else {
+                            res.status(401).json({ error: "Senha incorreta" })
+                        }
+                    }
+                    else {
+                        res.status(404).json({ error: "Usuário não encontrado" })
+                    }
+                }
+                else {
+                    res.status(400).json({ error: "Dados faltando ou incorretos" })
+                }
+            }
+            catch (err) {
+                app.log.error(err)
+                res.status(500).json({ error: "Erro ao tentar autenticar" })
+            }
         });
 
-        // Return the path of this routes and the all seted router
         return { path: '/auth/', router: routes }
     }
 }
