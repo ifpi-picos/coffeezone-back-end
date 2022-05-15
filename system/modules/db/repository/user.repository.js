@@ -1,4 +1,4 @@
-const { user } = require('../models')
+const { users } = require('../models')
 
 module.exports = class UserRepository {
     constructor(){
@@ -18,38 +18,38 @@ module.exports = class UserRepository {
         }
     }
     async create(newUser) {
-        return await user.create(newUser)
+        return await users.create(newUser)
     }
 
     async getByEmail(email) {
-        return await user.findOne({ where: { email } })
+        return await users.findOne({ where: { email } })
     }
 
     async getByCardId(cardid) {
-        return await user.findOne({ where: { cardid } })
+        return await users.findOne({ where: { cardid } })
     }
 
     async getById(id) {
-        return await user.findByPk(id)
+        return await users.findByPk(id)
     }
 
     async updateById(userId, newUser) {
-        return await user.update(newUser, { where: { id: userId } })
+        return await users.update(newUser, { where: { id: userId } })
     }
 
     async updateFieldById(userId, field, value) {
-        return await user.update({ [field]: value }, { where: { id: userId } })
+        return await users.update({ [field]: value }, { where: { id: userId } })
     }
 
     async deleteById(userId) {
-        return await user.destroy({ where: { id: userId } })
+        return await users.destroy({ where: { id: userId } })
     }
 
     async deleteByEmail(email) {
-        return await user.destroy({ where: { email } })
+        return await users.destroy({ where: { email } })
     }
 
     async deleteByCardId(cardid) {
-        return await user.destroy({ where: { cardid } })
+        return await users.destroy({ where: { cardid } })
     }
 }

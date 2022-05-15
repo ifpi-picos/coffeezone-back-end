@@ -7,9 +7,9 @@ module.exports = class AuthRoute {
             try {
                 if (req.body.password && req.body.email) {
                     let user = await app.db.user.getByEmail(req.body.email)
-                    user = user.dataValues
 
                     if (user) {
+                        user = user.dataValues
                         if (app.services.auth.comparePassword(req.body.password, user.password)) {
                             const token = app.services.auth.createToken(user)
 
@@ -28,6 +28,7 @@ module.exports = class AuthRoute {
                 }
             }
             catch (err) {
+                app.log.error(err)
                 res.status(500).json({ error: "Erro ao tentar autenticar" })
             }
         });
