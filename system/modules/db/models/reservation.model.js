@@ -5,10 +5,6 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class reservations extends Model {
         static associate(models) {
-            reservations.hasOne(models.users, {
-                foreignKey: 'id',
-                as: 'userId'
-            })
         }
     }
 
@@ -20,12 +16,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
+        userid: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         equipment: {
             type: DataTypes.TEXT(2048),
             allowNull: true
         },
         time: {
-            type: DataTypes.DATE,
+            type: DataTypes.VARCHAR(255),
             allowNull: false
         },
         reason: {

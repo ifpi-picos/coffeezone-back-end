@@ -5,10 +5,6 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class relatorys extends Model {
         static associate(models) {
-            relatorys.hasOne(models.users, {
-                foreignKey: 'id',
-                as: 'userId'
-            })
         }
     }
 
@@ -19,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false,
             unique: true
+        },
+        userid: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         actions: {
             type: DataTypes.JSON,
