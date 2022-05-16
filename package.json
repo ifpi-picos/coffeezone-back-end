@@ -1,6 +1,6 @@
 {
   "name": "coffeezone-back-end",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Projeto Integrador I e Internet I 2022.1",
   "main": "index.js",
   "scripts": {
