@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         time: {
-            type: DataTypes.VARCHAR(255),
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         reason: {

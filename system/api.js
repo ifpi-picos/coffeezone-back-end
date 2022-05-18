@@ -73,6 +73,15 @@ module.exports = class API {
             next()
         })
 
+        let middlewares = glob.sync(['**/middlewares/*.js', '!node_modules'], { cwd: process.cwd() })
+
+        middlewares.forEach(m => {
+            const Middleware = require(process.cwd() + "/" + m)
+            const middleware = new Middleware(this)
+
+            this.app.use(middleware.execute)
+        })
+
         this.log.start('Middlewares')
     }
 
@@ -89,7 +98,7 @@ module.exports = class API {
     }
 
     setRoutes() {
-        var routes = glob.sync(['**/routes/*.js', '!node_modules', '!public', '!views', '!modules'])
+        let routes = glob.sync(['**/routes/*.js', '!node_modules', '!public', '!views', '!modules'])
 
         const paths = new Array();
         const routers = new Array();
@@ -102,7 +111,7 @@ module.exports = class API {
             routers.push(router.router);
         })
 
-        for (var r in paths) {
+        for (let r in paths) {
             this.app.use(paths[r], routers[r])
         }
 
