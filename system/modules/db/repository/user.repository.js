@@ -18,7 +18,7 @@ module.exports = class UserRepository {
         }
     }
     async create(newUser) {
-        return await users.create(newUser)
+        return await users.create(newUser)  
     }
 
     async getByEmail(email) {
