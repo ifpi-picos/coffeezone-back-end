@@ -23,7 +23,8 @@ module.exports = class ReservationService {
             name: "reservation",
             functions: {
                 verifyDuplicate: this.verifyDuplicate,
-                validateNewReservation: this.validateNewReservation
+                validateNewReservation: this.validateNewReservation,
+                verifyDuplicateModified: this.verifyDuplicateModified
             }
         }
     }
@@ -49,12 +50,12 @@ module.exports = class ReservationService {
                 throw new ValidationError('O horário de início deve ser maior que o atual')
             }
 
-            if(newStartTime.hour >= 7 && newEndTime.hour <= 22){
-                throw new ValidationError('O horário de início deve ser maior que 7 horas e menor que 22 horas')
+            if(newStartTime.hour < 7 || newStartTime.hour > 21) {
+                throw new ValidationError('O horário de início deve ser entre 7:00 e 21:00')
             }
 
-            if(newStartTime.hour <= 22 && newEndTime.hour >= 22){
-                throw new ValidationError('O horário de fim deve ser menor que 22 horas e maior que 7 horas')
+            if(newEndTime.hour < 8 || newEndTime.hour > 22) {
+                throw new ValidationError('O horário de fim deve ser entre 8:00 e 22:00')
             }
 
             if(newStartTime.weekday === 6 || newStartTime.weekday === 7){
@@ -81,7 +82,7 @@ module.exports = class ReservationService {
     async verifyDuplicate(newReservation) {
         let reservationUser = await db.reservation.getByUserId(newReservation.userid)
 
-        if (reservationUser.length > 0) {
+        if (reservationUser) {
             throw new DuplicationError('O usuário já possui uma reserva')
         }
 
@@ -95,6 +96,22 @@ module.exports = class ReservationService {
             const endTime = time.fromFormat(reservation.time.split('-')[1], 'dd/MM/yyyy|HH:mm')
 
             if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis()) {
+                throw new DuplicationError('O horário de início está em conflito com outra reserva')
+            }
+        })
+    }
+
+    async verifyDuplicateModified (newReservation){
+        let reservations = await db.reservation.getAll()
+
+        const newStartTime = time.fromFormat(newReservation.time.split('-')[0], 'dd/MM/yyyy|HH:mm')
+        const newEndTime = time.fromFormat(newReservation.time.split('-')[1], 'dd/MM/yyyy|HH:mm')
+
+        reservations.forEach(reservation => {
+            const startTime = time.fromFormat(reservation.time.split('-')[0], 'dd/MM/yyyy|HH:mm')
+            const endTime = time.fromFormat(reservation.time.split('-')[1], 'dd/MM/yyyy|HH:mm')
+
+            if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis() && reservation.id !== newReservation.id) {
                 throw new DuplicationError('O horário de início está em conflito com outra reserva')
             }
         })

@@ -1,13 +1,15 @@
 const { reservations } = require('../models')
 
 module.exports = class ReservationRepository {
-    constructor(){
-        return{
+    constructor() {
+        return {
             name: "reservation",
             functions: {
                 create: this.create,
                 getByUserId: this.getByUserId,
-                getAll: this.getAll 
+                getAll: this.getAll,
+                updateById: this.updateById,
+                deleteById: this.deleteById,
             }
         }
     }
@@ -17,7 +19,7 @@ module.exports = class ReservationRepository {
     }
 
     async getByUserId(userId) {
-        return await reservations.findAll({
+        return await reservations.findOne({
             where: {
                 userid: userId
             }
@@ -26,5 +28,13 @@ module.exports = class ReservationRepository {
 
     async getAll() {
         return await reservations.findAll()
+    }
+
+    async updateById(id, newReservation) {
+        return await reservations.update(newReservation, { where: { id: id } })
+    }
+
+    async deleteById(id) {
+        return await reservations.destroy({ where: { id: id } })
     }
 }
