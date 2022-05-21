@@ -7,6 +7,7 @@ module.exports = class RelatorysRepository {
       functions: {
         create: this.create,
         getByUserId: this.getByUserId,
+        getAll: this.getAll,
         updateActionsByUserId: this.updateActionsByUserId,
         deleteByUserId: this.deleteByUserId
       }
@@ -19,6 +20,10 @@ module.exports = class RelatorysRepository {
 
   async getByUserId (userid) {
     return await relatorys.findOne({ where: { userid } })
+  }
+
+  async getAll () {
+    return await relatorys.findAll()
   }
 
   async updateActionsByUserId (userid, newAction) {
