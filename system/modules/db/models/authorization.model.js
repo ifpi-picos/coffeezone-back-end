@@ -5,11 +5,6 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
     class authorizations extends Model {
         static associate(models) {
-            authorizations.hasOne(models.reservations, {
-                foreignKey: 'id',
-                as: 'reservationId',
-                allowNull: false
-            })
         }
     }
 
