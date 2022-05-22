@@ -1,21 +1,29 @@
 module.exports = class ReservationsRoute {
-  constructor (app) {
+  constructor(app) {
     const { Router } = require('express')
     const routes = Router()
 
     routes.post('/', async (req, res) => {
       try {
-        app.services.reservation.validateNewReservation(req.body)
-        await app.services.reservation.verifyDuplicate(req.body)
+        let user = await app.db.user.getById(req.user.id)
+        if (user) {
+          req.body.userid = user.id
 
-        const reservation = await app.db.reservation.create({
-          userid: req.body.userid,
-          equipment: req.body.equipment || null,
-          time: req.body.time,
-          reason: req.body.reason || null
-        })
+          app.services.reservation.validateNewReservation(req.body)
+          await app.services.reservation.verifyDuplicate(req.body)
 
-        res.status(201).json({ id: reservation.id })
+          const reservation = await app.db.reservation.create({
+            userid: req.user.id,
+            equipment: req.body.equipment || null,
+            time: req.body.time,
+            reason: req.body.reason || null
+          })
+
+          res.status(201).json({ id: reservation.id })
+        }
+        else {
+          res.status(404).json({ error: 'Usuário não encontrado' })
+        }
       } catch (err) {
         if (err.name == 'DuplicationError' || err.name == 'ValidationError') {
           res.status(400).json({ error: err.message })
@@ -62,7 +70,7 @@ module.exports = class ReservationsRoute {
         }
       } catch (err) {
         app.log.error(err)
-        res.status(500).json({ error: 'Erro ao tentar retornar reservas' })
+        res.status(500).json({ error: 'Erro ao tentar retornar reserva' })
       }
     })
 
@@ -71,22 +79,27 @@ module.exports = class ReservationsRoute {
         let user = await app.db.user.getById(req.user.id)
         let reservation = await app.db.reservation.getByUserId(user.id)
 
-        if (!reservation) {
-          res.status(404).json({ error: 'Reserva não encontrada' })
-        } else {
-          if (req.body.modify.id) {
-            delete req.body.modify.id
+        if (user) {
+          if (!reservation) {
+            res.status(404).json({ error: 'Reserva não encontrada' })
+          } else {
+            if (req.body.modify.id) {
+              delete req.body.modify.id
+            }
+
+            reservation = reservation.dataValues
+
+            let newReservation = Object.assign({}, reservation, req.body.modify)
+
+            app.services.reservation.validateNewReservation(newReservation)
+            await app.services.reservation.verifyDuplicateModified(newReservation)
+
+            await app.db.reservation.updateById(reservation.id, newReservation)
+            res.status(200).json({ success: 'Reserva atualizada' })
           }
-
-          reservation = reservation.dataValues
-
-          let newReservation = Object.assign({}, reservation, req.body.modify)
-
-          app.services.reservation.validateNewReservation(newReservation)
-          await app.services.reservation.verifyDuplicateModified(newReservation)
-
-          await app.db.reservation.updateById(reservation.id, newReservation)
-          res.status(200).json({ success: 'Reserva atualizada' })
+        }
+        else {
+          res.status(404).json({ error: 'Usuário não encontrado' })
         }
       } catch (err) {
         if (err.name == 'ValidationError' || err.name == 'DuplicationError') {
@@ -103,12 +116,17 @@ module.exports = class ReservationsRoute {
         let user = await app.db.user.getById(req.user.id)
         let reservation = await app.db.reservation.getByUserId(user.id)
 
-        if (!reservation) {
-          res.status(404).json({ error: 'Reserva não encontrada' })
-        } 
+        if (user) {
+          if (!reservation) {
+            res.status(404).json({ error: 'Reserva não encontrada' })
+          }
+          else {
+            await app.db.reservation.deleteById(reservation.id)
+            res.status(200).json({ success: 'Reserva deletada' })
+          }
+        }
         else {
-          await app.db.reservation.deleteById(reservation.id)
-          res.status(200).json({ success: 'Reserva deletada' })
+          res.status(404).json({ error: 'Usuário não encontrado' })
         }
       } catch (err) {
         app.log.error(err)

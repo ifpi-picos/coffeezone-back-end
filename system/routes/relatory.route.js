@@ -1,5 +1,5 @@
 module.exports = class RelatoryRoute {
-  constructor (app) {
+  constructor(app) {
     const { Router } = require('express')
     const routes = Router()
 
@@ -30,9 +30,10 @@ module.exports = class RelatoryRoute {
         }
       } catch (err) {
         app.log.error(err)
-        res.status(500).json({ error: err })
+        res.status(500).json({ error: 'Erro ao tentar registrar ação' })
       }
     })
+
     routes.get('/', async (req, res) => {
       try {
         let user = await app.db.user.getById(req.user.id)
@@ -84,7 +85,7 @@ module.exports = class RelatoryRoute {
         }
       } catch (err) {
         app.log.error(err)
-        res.status(500).json({ error: err })
+        res.status(500).json({ error: 'Erro ao tentar retornar relatório' })
       }
     })
 

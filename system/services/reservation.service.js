@@ -98,6 +98,10 @@ module.exports = class ReservationService {
             if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis()) {
                 throw new DuplicationError('O horário de início está em conflito com outra reserva')
             }
+
+            if (newEndTime.toMillis() >= startTime.toMillis() && newEndTime.toMillis() <= endTime.toMillis()) {
+                throw new DuplicationError('O horário de fim está em conflito com outra reserva')
+            }
         })
     }
 
