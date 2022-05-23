@@ -1,4 +1,4 @@
-const excludeRoutes = ['POST|/auth/login', 'POST|/users/', 'POST|/relatory/']
+const excludeRoutes = ['POST|/auth/login', 'POST|/user/', 'POST|/relatory/']
 let app
 
 module.exports = class ValidateToken {
