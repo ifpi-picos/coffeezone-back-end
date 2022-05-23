@@ -3,12 +3,12 @@
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-    class reservations extends Model {
+    class equipments extends Model {
         static associate(models) {
         }
     }
 
-    reservations.init({
+    equipments.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -16,30 +16,22 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        userid: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        equipmentid: {
-            type: DataTypes.STRING(255),
-            allowNull: true
-        },
-        time: {
-            type: DataTypes.STRING(255),
+        name: {
+            type: DataTypes.TEXT(2048),
             allowNull: false
         },
-        reason: {
+        status: {
             type: DataTypes.TEXT(2048),
-            allowNull: true
-        }
+            allowNull: false
+        },
     }, {
         sequelize,
-        modelName: 'reservations',
+        modelName: 'equipments',
         paranoid: false,
         timestamps: false
     })
-    
-    return reservations
+
+    return equipments
 }
 
 
