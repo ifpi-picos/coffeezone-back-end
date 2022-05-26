@@ -8,7 +8,7 @@ module.exports = class EquipmentsRepository {
                 getAll: this.getAll,
                 getById: this.getById,
                 create: this.create,
-                updateById: this.updateById,
+                updateFieldById: this.updateFieldById,
                 deleteById: this.deleteById
             }
         }
@@ -26,8 +26,8 @@ module.exports = class EquipmentsRepository {
         return await equipments.create(equipment)
     }
 
-    async updateById(id, equipment) {
-        return await equipments.update(equipment, { where: { id } })
+    async updateFieldById(id, field, value) {
+        return await equipments.update({[field]: value}, { where: { id } })
     }
 
     async deleteById(id) {
