@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        reservationid: {
-            type: DataTypes.INTEGER,
+        type: {
+            type: DataTypes.STRING,
             allowNull: false
         },
         status: {
@@ -25,9 +25,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         laststatustime: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING(255),
             allowNull: false
-        }
+        },
+        data: {
+            type: DataTypes.JSON,
+            allowNull: false
+        },
     }, {
         sequelize,
         modelName: 'authorizations',
