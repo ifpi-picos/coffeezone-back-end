@@ -45,8 +45,8 @@ module.exports = class API {
     }
 
     setMiddlewares() {
-        this.app.set('public', path.join(__dirname, 'public'))
-        this.app.use(express.static('public'));
+        // this.app.set('public', path.join(__dirname, 'public'))
+        // this.app.use(express.static('public'));
 
         this.app.use(express.json());
 
@@ -86,6 +86,9 @@ module.exports = class API {
     }
 
     setServices() {
+        const mailer = require('./modules/email/email.js')
+        this.mailer = new mailer(this)
+
         this.services = new Object()
         glob.sync(['**/services/*.service.js', '!node_modules'], { cwd: process.cwd() })
             .forEach(file => {
@@ -98,7 +101,7 @@ module.exports = class API {
     }
 
     setRoutes() {
-        let routes = glob.sync(['**/routes/*.js', '!node_modules', '!public', '!views', '!modules'])
+        let routes = glob.sync(['**/routes/*.js', '!node_modules', '!modules'])
 
         const paths = new Array();
         const routers = new Array();

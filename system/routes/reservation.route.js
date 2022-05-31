@@ -1,5 +1,5 @@
 module.exports = class ReservationsRoute {
-  constructor(app) {
+  constructor (app) {
     const { Router } = require('express')
     const routes = Router()
 
@@ -12,16 +12,29 @@ module.exports = class ReservationsRoute {
           app.services.reservation.validateNewReservation(req.body)
           await app.services.reservation.verifyDuplicate(req.body)
 
+          if (req.body.equipmentid) {
+            let equipment = await app.db.equipment.getById(req.body.equipmentid)
+
+            if (equipment.status != 'Disponível') {
+              return res.status(400).json({ error: 'Equipamento já reservado' })
+            } else {
+              await app.db.equipment.updateById(
+                equipment.id,
+                'status',
+                'Em uso'
+              )
+            }
+          }
+
           const reservation = await app.db.reservation.create({
             userid: req.user.id,
-            equipment: req.body.equipment || null,
+            equipmentid: req.body.equipmentid || null,
             time: req.body.time,
             reason: req.body.reason || null
           })
 
           res.status(201).json({ id: reservation.id })
-        }
-        else {
+        } else {
           res.status(404).json({ error: 'Usuário não encontrado' })
         }
       } catch (err) {
@@ -60,7 +73,7 @@ module.exports = class ReservationsRoute {
             res.status(200).json({
               id: reservations.id,
               userid: reservations.userid,
-              equipment: reservations.equipment,
+              equipmentid: reservations.equipmentid,
               time: reservations.time,
               reason: reservations.reason
             })
@@ -92,13 +105,14 @@ module.exports = class ReservationsRoute {
             let newReservation = Object.assign({}, reservation, req.body.modify)
 
             app.services.reservation.validateNewReservation(newReservation)
-            await app.services.reservation.verifyDuplicateModified(newReservation)
+            await app.services.reservation.verifyDuplicateModified(
+              newReservation
+            )
 
             await app.db.reservation.updateById(reservation.id, newReservation)
             res.status(200).json({ success: 'Reserva atualizada' })
           }
-        }
-        else {
+        } else {
           res.status(404).json({ error: 'Usuário não encontrado' })
         }
       } catch (err) {
@@ -119,13 +133,11 @@ module.exports = class ReservationsRoute {
         if (user) {
           if (!reservation) {
             res.status(404).json({ error: 'Reserva não encontrada' })
-          }
-          else {
+          } else {
             await app.db.reservation.deleteById(reservation.id)
             res.status(200).json({ success: 'Reserva deletada' })
           }
-        }
-        else {
+        } else {
           res.status(404).json({ error: 'Usuário não encontrado' })
         }
       } catch (err) {
