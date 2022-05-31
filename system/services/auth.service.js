@@ -26,7 +26,8 @@ module.exports = class AuthService {
             id: user.id,
             email: user.email,
             name: user.name,
-            type: user.type
+            preferences: user.preferences,
+            type: user.type,
         }
 
         let token = jwt.sign(payload, process.env.JWT_KEY) 

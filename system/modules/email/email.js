@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const fs = require('fs')
 const path = require('path')
+const time = require('luxon').DateTime
 
 module.exports = class Mailer {
     constructor() {
@@ -13,7 +14,8 @@ module.exports = class Mailer {
         })
 
         this.emails = {
-            redefine: fs.readFileSync(path.join(__dirname, 'email.html'), 'utf8')
+            redefine: fs.readFileSync(path.join(__dirname, 'recovery.html'), 'utf8'),
+            actionReg: fs.readFileSync(path.join(__dirname, 'actionReg.html'), 'utf8')
         }
     }
 
@@ -27,6 +29,30 @@ module.exports = class Mailer {
                 from: 'coffee-zone@hotmail.com',
                 to: user.email,
                 subject: 'Coffee Zone - Redefinir Senha',
+                html: email
+            }, (err, info) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(info)
+                }
+            })
+        })
+
+        return await mailInfo
+    }
+
+    async sendActionRegisteredEmail(user, action) {
+        let email = this.emails.actionReg
+        email = email.split(/\$username\$/gm).join(user.name.trim().split(' ')[0])
+        email = email.split(/\$time\$/gm).join(`${action.newActionDateTime.day} às ${action.newActionDateTime.time}`)
+        email = email.split(/\$action\$/gm).join(action.action)
+
+        let mailInfo = new Promise((resolve, reject) => {
+            this.mailer.sendMail({
+                from: 'coffee-zone@hotmail.com',
+                to: user.email,
+                subject: `Coffee Zone - ${action.action} Registrada`,
                 html: email
             }, (err, info) => {
                 if (err) {

@@ -49,6 +49,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             allowNull: true
         },
+        preferences: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: {
+                'sendActionRegEmail': true,
+            }
+        },
+        profileImage: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
     }, {
         sequelize,
         modelName: 'users',
