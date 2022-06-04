@@ -80,9 +80,7 @@ module.exports = class RelatoryRoute {
             const relatory = await app.db.relatory.getByUserId(user.id)
 
             if (relatory) {
-              res
-                .status(200)
-                .json({ userid: relatory.userid, actions: relatory.actions })
+              res.status(200).json({ userid: relatory.userid, actions: relatory.actions })
             } else {
               res.status(404).json({ error: 'Nenhum relatório deste usuário' })
             }

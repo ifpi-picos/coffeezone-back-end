@@ -103,6 +103,21 @@ module.exports = class ReservationService {
                 throw new DuplicationError('O horário de fim está em conflito com outra reserva')
             }
         })
+
+        const authorizations = await db.authorization.getAll('Reservation')
+
+        authorizations.forEach(authorization => {
+            const startTime = time.fromFormat(authorization.data.time.split('-')[0], 'dd/MM/yyyy|HH:mm')
+            const endTime = time.fromFormat(authorization.data.time.split('-')[1], 'dd/MM/yyyy|HH:mm')
+
+            if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis()) {
+                throw new DuplicationError('O horário de início está em conflito com uma reserva ainda em autorização')
+            }
+
+            if (newEndTime.toMillis() >= startTime.toMillis() && newEndTime.toMillis() <= endTime.toMillis()) {
+                throw new DuplicationError('O horário de fim está em conflito com uma reserva ainda em autorização')
+            }
+        })
     }
 
     async verifyDuplicateModified (newReservation){
@@ -117,6 +132,17 @@ module.exports = class ReservationService {
 
             if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis() && reservation.id !== newReservation.id) {
                 throw new DuplicationError('O horário de início está em conflito com outra reserva')
+            }
+        })
+
+        const authorizations = await db.authorization.getAll('Reservation')
+
+        authorizations.forEach(authorization => {
+            const startTime = time.fromFormat(authorization.data.time.split('-')[0], 'dd/MM/yyyy|HH:mm')
+            const endTime = time.fromFormat(authorization.data.time.split('-')[1], 'dd/MM/yyyy|HH:mm')
+
+            if (newStartTime.toMillis() >= startTime.toMillis() && newStartTime.toMillis() <= endTime.toMillis() && authorization.id !== newReservation.id) {
+                throw new DuplicationError('O horário de início está em conflito com uma reserva ainda em autorização')
             }
         })
     }

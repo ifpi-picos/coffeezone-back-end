@@ -7,6 +7,7 @@ module.exports = class AuthorizationsRepository {
             functions: {
                 getAll: this.getAll,
                 getById: this.getById,
+                getByUserId: this.getByUserId,
                 create: this.create,
                 updateFieldById: this.updateFieldById,
                 deleteById: this.deleteById
@@ -14,8 +15,13 @@ module.exports = class AuthorizationsRepository {
         }
     }
 
-    async getAll() {
-        return await authorizations.findAll()
+    async getAll(type) {
+        if (type) {
+            return await authorizations.findAll({ where: { type: type } })
+        }
+        else {
+            return await authorizations.findAll()
+        }
     }
 
     async getById(id) {
@@ -23,7 +29,7 @@ module.exports = class AuthorizationsRepository {
     }
 
     async getByUserId(userId) {
-        return await authorizations.findOne({ where: { data: { meta: { userid: userId } } } })
+        return await authorizations.findOne({ where: { userid: userId } })
     }
 
     async create(authorization) {

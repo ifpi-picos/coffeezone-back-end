@@ -28,11 +28,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        phone: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-            unique: true
-        },
         password: {
             type: DataTypes.STRING(255),
             allowNull: false
@@ -42,8 +37,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         type: {
-            type: DataTypes.STRING(255),
-            allowNull: false
+            type: DataTypes.ENUM,
+            allowNull: false,
+            values: ['Coordinator', 'Member', 'Visitor'],
         },
         linkedin: {
             type: DataTypes.STRING(255),
@@ -56,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
                 'sendActionRegEmail': true,
             }
         },
-        profileImage: {
+        profileimage: {
             type: DataTypes.TEXT,
             allowNull: true
         },

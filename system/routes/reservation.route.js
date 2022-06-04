@@ -1,4 +1,4 @@
-const time = require('luxon').Datetime
+const time = require("luxon").DateTime
 
 module.exports = class ReservationsRoute {
   constructor(app) {
@@ -19,15 +19,17 @@ module.exports = class ReservationsRoute {
 
             if (equipment.status != 'Disponível') {
               return res.status(400).json({ error: 'Equipamento já reservado' })
-            } else {
+            } 
+            else {
               await app.db.equipment.updateById(equipment.id, 'status', 'Em uso')
             }
           }
 
           const authorization = await app.db.authorization.create({
             status: 'Pending',
-            laststatustime: `${time.timezone('America/Sao_Paulo').toFormat('dd/MM/yyyy|HH:mm:ss')}`,
+            laststatustime: `${time.local({ zone: "America/Fortaleza" }).toFormat('dd/MM/yyyy|HH:mm:ss')}`,
             type: 'Reservation',
+            userid: req.user.id,
             data: {
               userid: req.user.id,
               equipmentid: req.body.equipmentid || null,
@@ -35,8 +37,6 @@ module.exports = class ReservationsRoute {
               reason: req.body.reason || null
             }
           })
-
-          console.log(authorization)
 
           res.status(201).json({ id: authorization.id })
         } else {
