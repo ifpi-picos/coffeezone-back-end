@@ -1,5 +1,7 @@
+const time = require("luxon").DateTime
+
 module.exports = class ReservationsRoute {
-  constructor (app) {
+  constructor(app) {
     const { Router } = require('express')
     const routes = Router()
 
@@ -17,23 +19,26 @@ module.exports = class ReservationsRoute {
 
             if (equipment.status != 'Disponível') {
               return res.status(400).json({ error: 'Equipamento já reservado' })
-            } else {
-              await app.db.equipment.updateById(
-                equipment.id,
-                'status',
-                'Em uso'
-              )
+            } 
+            else {
+              await app.db.equipment.updateById(equipment.id, 'status', 'Em uso')
             }
           }
 
-          const reservation = await app.db.reservation.create({
+          const authorization = await app.db.authorization.create({
+            status: 'Pending',
+            laststatustime: `${time.local({ zone: "America/Fortaleza" }).toFormat('dd/MM/yyyy|HH:mm:ss')}`,
+            type: 'Reservation',
             userid: req.user.id,
-            equipmentid: req.body.equipmentid || null,
-            time: req.body.time,
-            reason: req.body.reason || null
+            data: {
+              userid: req.user.id,
+              equipmentid: req.body.equipmentid || null,
+              time: req.body.time,
+              reason: req.body.reason || null
+            }
           })
 
-          res.status(201).json({ id: reservation.id })
+          res.status(201).json({ id: authorization.id })
         } else {
           res.status(404).json({ error: 'Usuário não encontrado' })
         }

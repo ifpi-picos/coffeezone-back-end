@@ -17,14 +17,19 @@ module.exports = class RelatoryRoute {
           )
 
           if (relatory) {
-            await app.db.relatory.updateActionsByUserId(user.id, actions)
+            await app.db.relatory.updateActionsByUserId(user.id, actions.newAction)
           } else {
             await app.db.relatory.create({
               userid: user.id,
-              actions: actions
+              actions: actions.newAction
             })
           }
-          res.status(200).json({ sucess: 'Ação adicionada' })
+
+          if (user.preferences.sendActionRegEmail) {
+            app.mailer.sendActionRegisteredEmail(user, actions)
+          }
+
+          res.status(200).json({ success: 'Ação adicionada' })
         } else {
           res.status(404).json({ error: 'Usuario não encontrado' })
         }
@@ -75,9 +80,7 @@ module.exports = class RelatoryRoute {
             const relatory = await app.db.relatory.getByUserId(user.id)
 
             if (relatory) {
-              res
-                .status(200)
-                .json({ userid: relatory.userid, actions: relatory.actions })
+              res.status(200).json({ userid: relatory.userid, actions: relatory.actions })
             } else {
               res.status(404).json({ error: 'Nenhum relatório deste usuário' })
             }

@@ -16,14 +16,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
+        userid: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         type: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM,
+            values: ['Reservation', 'User'],
             allowNull: false
-        },
-        status: {
-            type: DataTypes.TEXT(2048),
+          },
+          status: {
+            type: DataTypes.ENUM,
+            values: ['Pending', 'Approved', 'Denied'],
             allowNull: false
-        },
+          },
         laststatustime: {
             type: DataTypes.STRING(255),
             allowNull: false

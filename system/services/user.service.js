@@ -1,5 +1,6 @@
 const crypto = require('bcrypt')
 let db
+const userType = ['Coordinator', 'Member', 'Visitor']
 
 class ValidationError extends Error {
     constructor(message) {
@@ -43,8 +44,12 @@ module.exports = class UserService {
             throw new ValidationError("Email inválido")
         }
 
-        if (!newUser.type || !newUser.type.match(/^[a-zA-Z]{2,}$/g)) {
+        if (!newUser.type || !userType.includes(newUser.type)) {
             throw new ValidationError("Tipo inválido")
+        }
+
+        if (!newUser.password) {
+            throw new ValidationError("Senha inválida")
         }
     }
 

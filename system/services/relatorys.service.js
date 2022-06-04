@@ -13,12 +13,12 @@ module.exports = class RelatoryService {
         }
     }
 
-    createAction(actualActions){
-        const newActionDay = time.local({zone: "America/Fortaleza"}).toFormat("dd/MM/yyyy")
-        const newActionTime = time.local({zone: "America/Fortaleza"}).toFormat("HH:mm:ss")
+    createAction(actualActions) {
+        const newActionDay = time.local({ zone: "America/Fortaleza" }).toFormat("dd/MM/yyyy")
+        const newActionTime = time.local({ zone: "America/Fortaleza" }).toFormat("HH:mm:ss")
 
-        let newAction 
-        if(actualActions == null) {
+        let newAction
+        if (actualActions == null) {
             newAction = {
                 [newActionDay]: {
                     [newActionTime]: "Entrada"
@@ -27,7 +27,7 @@ module.exports = class RelatoryService {
 
             return newAction
         }
-        else{
+        else {
             const userActions = Object.entries(actualActions[newActionDay])
 
             let newerAction = 0
@@ -35,11 +35,11 @@ module.exports = class RelatoryService {
             userActions.forEach((action) => {
                 const actionTime = time.fromFormat(action[0], "HH:mm:ss")
 
-                if(newerAction == 0){
+                if (newerAction == 0) {
                     newAction = actionTime
                     lastAction = action[1]
                 }
-                else{
+                else {
                     if (actionTime.toMillis() >= newerAction.toMillis()) {
                         newerAction = actionTime.toFormat("HH:mm:ss")
                         lastAction = action[1]
@@ -57,7 +57,11 @@ module.exports = class RelatoryService {
                 }
             }
 
-            return newAction
+            return {
+                newAction: newAction,
+                action: action,
+                newActionDateTime: { day: newActionDay, time: newActionTime }
+            }
         }
     }
 }
