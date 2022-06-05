@@ -57,10 +57,11 @@ module.exports = class UserRoute {
                         cardid: user.cardid ? user.cardid : null,
                         name: user.name,
                         email: user.email,
-                        phone: user.phone ? user.phone : null,
                         occupation: user.occupation,
                         type: user.type,
-                        linkedin: user.linkedin ? user.linkedin : null
+                        linkedin: user.linkedin ? user.linkedin : null,
+                        profileimage: user.profileimage ? user.profileimage : null,
+                        preferences: user.preferences
                     })
                 }
             }
