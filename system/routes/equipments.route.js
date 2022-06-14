@@ -40,27 +40,23 @@ module.exports = class EquipmentRoute {
                     else if (req.body.getAll) {
                         equipment = await app.db.equipment.getAll()
                     }
-                }
-                else {
-                    equipment = await app.db.equipment.getById(req.user.id)
-                }
 
-                if (!equipment) {
-                    res.status(404).json({ error: 'Equipamento não encontrado' })
-                }
-                else {
-                    if (req.body.getAll) {
+                    if (equipment) {
                         res.status(200).json(equipment)
                     }
                     else {
-                        equipment = equipment.dataValues
-
-                        res.status(200).json({
-                            id: equipment.id,
-                            name: equipment.name,
-                            status: equipment.status,
-                        })
+                        res.status(404).json({ error: 'Nenhum equipamento encontrado' })
                     }
+                }
+                else {
+                    equipment = await app.db.equipment.getAll()
+                    equipment = equipment.dataValues
+
+                    res.status(200).json({
+                        id: equipment.id,
+                        name: equipment.name,
+                        status: equipment.status,
+                    })
                 }
             }
             catch (err) {
@@ -88,14 +84,7 @@ module.exports = class EquipmentRoute {
                         newEquipment = Object.assign({}, equipment, req.body.modify)
                     }
                     else {
-                        if (req.body.modify.id) {
-                            delete req.body.modify.id
-                        }
-                        else if (req.body.modify.name) {
-                            delete req.body.modify.name
-                        }
-
-                        newEquipment = Object.assign({}, equipment, req.body.modify)
+                        res.status(403).json({ error: 'Apenas coordenadores podem modificar equipamentos' })
                     }
 
                     app.services.equipment.validateEquipment(newEquipment)
