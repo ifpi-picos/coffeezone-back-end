@@ -25,7 +25,11 @@ module.exports = class RelatoryService {
                 }
             }
 
-            return newAction
+            return {
+                newAction: newAction,
+                action: "Entrada",
+                newActionDateTime: { day: newActionDay, time: newActionTime }
+            }
         }
         else {
             const userActions = Object.entries(actualActions[newActionDay])

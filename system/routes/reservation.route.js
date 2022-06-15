@@ -63,7 +63,7 @@ module.exports = class ReservationsRoute {
           } else if (req.body.cardid) {
             user = await app.db.user.getByCardId(req.body.cardid)
           } else {
-            user = await app.db.getById(req.user.id)
+            user = await app.db.user.getById(req.user.id)
           }
         } else {
           user = await app.db.user.getById(req.user.id)

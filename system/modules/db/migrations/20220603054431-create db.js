@@ -144,7 +144,7 @@ module.exports = {
       },
       userid: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       type: {
         type: Sequelize.ENUM,
