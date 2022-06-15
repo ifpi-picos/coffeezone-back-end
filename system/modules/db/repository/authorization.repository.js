@@ -1,4 +1,4 @@
-const { authorizations } = require('../models')
+const { authorizations, users, reservations } = require('../models')
 
 module.exports = class AuthorizationsRepository {
     constructor() {
@@ -42,5 +42,44 @@ module.exports = class AuthorizationsRepository {
 
     async deleteById(id) {
         return await authorizations.destroy({ where: { id } })
+    }
+
+    async approve(authorization) {
+        return await new Promise(async (resolve, reject) => {
+            if (authorization.type == "Reservation") {
+                reservations.create(authorization.data)
+                    .then(() => {
+                        authorizations.destroy({ where: { id: authorization.id } })
+                            .then(() => {
+                                resolve()
+                            })
+                            .catch(err => {
+                                reject(err)
+                            })
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            }
+            else if (authorization.type == "User") {
+                users.create(authorization.data)
+                    .then(() => {
+                        authorizations.destroy({ where: { id: authorization.id } })
+                            .then(() => {
+                                resolve()
+                            })
+                            .catch(err => {
+                                reject(err)
+                            })
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            }
+        })
+    }
+
+    async deny(authorization) {
+        return await authorizations.destroy({ where: { id: authorization.id } })
     }
 }
