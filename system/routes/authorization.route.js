@@ -16,14 +16,7 @@ module.exports = class AuthorizationRoute {
           }
         }
         else {
-          const authorizations = await app.db.authorization.getByUserId(req.user.id);
-
-          if (authorizations) {
-            res.status(200).json(authorizations);
-          }
-          else {
-            res.status(404).json({ error: "Nenhuma item para ser autorizado" });
-          }
+          res.status(403).json({ error: "Somente o coordenador pode autorizar" });
         }
       }
       catch (err) {

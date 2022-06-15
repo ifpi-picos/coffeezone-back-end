@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         userid: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         type: {
             type: DataTypes.ENUM,

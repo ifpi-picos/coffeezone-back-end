@@ -19,6 +19,7 @@ module.exports = class RelatoryRoute {
           if (relatory) {
             await app.db.relatory.updateActionsByUserId(user.id, actions.newAction)
           } else {
+            console.log(actions)
             await app.db.relatory.create({
               userid: user.id,
               actions: actions.newAction
@@ -73,7 +74,17 @@ module.exports = class RelatoryRoute {
 
                 res.status(200).json({ relatory })
               } else {
-                res.status(404).json({ error: 'Usuario não encontrado' })
+                const relatory = await app.db.relatory.getByUserId(req.user.id)
+
+                if (relatory) {
+                  res
+                    .status(200)
+                    .json({ userid: relatory.userid, actions: relatory.actions })
+                }
+                else {
+                  res.status(404).json({ error: 'Nenhum relatório encontrado' })
+                }
+
               }
             }
           } else {

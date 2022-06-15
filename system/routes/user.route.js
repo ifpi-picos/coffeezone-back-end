@@ -16,7 +16,6 @@ module.exports = class UserRoute {
                         status: 'Pending',
                         laststatustime: `${time.local({ zone: "America/Fortaleza" }).toFormat('dd/MM/yyyy|HH:mm:ss')}`,
                         type: 'User',
-                        userid: req.user.id,
                         data: req.body 
                     })
 
@@ -53,7 +52,7 @@ module.exports = class UserRoute {
                         user = await app.db.user.getByCardId(req.body.cardid)
                     }
                     else {
-                        user = await app.db.getById(req.user.id)
+                        user = await app.db.user.getById(req.user.id)
                     }
                 }
                 else {
