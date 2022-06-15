@@ -1,3 +1,5 @@
+const time = require("luxon").DateTime
+
 module.exports = class UserRoute {
     constructor(app) {
         const { Router } = require('express');
@@ -9,9 +11,21 @@ module.exports = class UserRoute {
                 await app.services.user.verifyDuplicate(req.body)
                 req.body.password = app.services.user.hashPassword(req.body.password)
 
-                const user = await app.db.user.create(req.body)
+                if (req.body.type == 'Coordinator' || req.body.type == 'Member') {
+                    const authorization = await app.db.authorization.create({
+                        status: 'Pending',
+                        laststatustime: `${time.local({ zone: "America/Fortaleza" }).toFormat('dd/MM/yyyy|HH:mm:ss')}`,
+                        type: 'User',
+                        userid: req.user.id,
+                        data: req.body 
+                    })
 
-                res.status(201).json({ id: user.id })
+                    res.status(201).json({ id: authorization.id })
+                }
+                else {
+                    const user = await app.db.user.create(req.body)
+                    res.status(201).json({ id: user.id })
+                }
             }
             catch (err) {
                 if (err.name == "ValidationError" || err.name == "DuplicationError") {
