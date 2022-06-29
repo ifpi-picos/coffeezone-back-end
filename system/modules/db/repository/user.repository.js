@@ -9,6 +9,7 @@ module.exports = class UserRepository {
                 getByEmail: this.getByEmail,
                 getByCardId: this.getByCardId,
                 getById: this.getById,
+                getAll: this.getAll,
                 updateById: this.updateById,
                 updateFieldById: this.updateFieldById,
                 updatePreferencesById: this.updatePreferencesById,
@@ -33,6 +34,10 @@ module.exports = class UserRepository {
 
     async getById(id) {
         return await users.findByPk(id)
+    }
+
+    async getAll(){
+        return await users.findAll()
     }
 
     async updateById(userId, newUser) {

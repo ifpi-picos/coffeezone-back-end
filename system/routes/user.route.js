@@ -16,7 +16,7 @@ module.exports = class UserRoute {
                         status: 'Pending',
                         laststatustime: `${time.local({ zone: "America/Fortaleza" }).toFormat('dd/MM/yyyy|HH:mm:ss')}`,
                         type: 'User',
-                        data: req.body 
+                        data: req.body
                     })
 
                     res.status(201).json({ id: authorization.id })
@@ -50,6 +50,25 @@ module.exports = class UserRoute {
                     }
                     else if (req.body.cardid) {
                         user = await app.db.user.getByCardId(req.body.cardid)
+                    }
+                    else if (req.body.getAll) {
+                        let users = await app.db.user.getAll()
+
+                        let allUsers = new Array()
+                        users.forEach(user => {
+                            allUsers.push({
+                                id: user.id,
+                                cardid: user.cardid || null,
+                                name: user.name,
+                                email: user.email,
+                                profileimage: user.profileimage,
+                                occupation: user.occupation,
+                                type: user.type,
+                                linkedin: user.linkedin
+                            })
+                        })
+
+                        return res.status(200).json(allUsers)
                     }
                     else {
                         user = await app.db.user.getById(req.user.id)
