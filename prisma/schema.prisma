@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  Coordinator
+  Member
+  Visitor
+}
+
+enum EquipmentState {
+  Avaliable
+  Reserved
+}
+
+enum AuthorizationType {
+  Reservation
+  User
+}
+
+enum AuthorizationStatus {
+  Pending
+  Approved
+  Denied
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  cardid        String?         @unique @db.Char(10)
+  name          String
+  email         String          @unique
+  password      String          @db.Text
+  occupation    String?
+  type          UserType
+  linkedin      String?         @db.Text
+  preferences   Json?           @default("{\"sendActionRegEmail\": true}")
+  profileimage  String?         @db.Text
+  Reservation   Reservation[]
+  Relatory      Relatory[]
+  Authorization Authorization[]
+}
+
+model Equipment {
+  id          Int            @id @default(autoincrement())
+  name        String         @db.Text
+  status      EquipmentState
+  Reservation Reservation[]
+}
+
+model Reservation {
+  id          Int        @id @default(autoincrement())
+  userId      User       @relation(references: [id], fields: [userid])
+  userid      Int
+  equipmentId Equipment? @relation(references: [id], fields: [equipmentid])
+  equipmentid Int?
+  time        String
+  reason      String     @db.Text
+}
+
+model Relatory {
+  id      Int  @id @default(autoincrement())
+  userId  User @relation(references: [id], fields: [userid])
+  userid  Int
+  actions Json
+}
+
+model Authorization {
+  id             Int                 @id @default(autoincrement())
+  userId         User?               @relation(references: [id], fields: [userid])
+  userid         Int?
+  type           AuthorizationType
+  status         AuthorizationStatus
+  laststatustime String
+  data           Json
+}
