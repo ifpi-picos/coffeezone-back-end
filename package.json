@@ -1,14 +1,13 @@
 {
   "name": "coffeezone-back-end",
-  "version": "2.0.0",
-  "description": "Trabalho de Projeto Integrador e Prog Para Internet 2022.1 ~ 2022.2",
+  "version": "1.13.1",
+  "description": "Projeto Integrador I e Internet I 2022.1",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "build": "tsc",
-    "build-start": "tsc && node server.js",
-    "test": "jest --forceExit",
-    "build-test": "tsc && jest --forceExit"
+    "start": "node index.js",
+    "create-migration": "npx sequelize-cli migration:generate",
+    "migrate": "npx sequelize-cli db:migrate",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -21,37 +20,18 @@
     "url": "https://github.com/ifpi-picos/coffeezone-back-end/issues"
   },
   "homepage": "https://github.com/ifpi-picos/coffeezone-back-end#readme",
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.18.6",
-    "@types/bcrypt": "^5.0.0",
-    "@types/cors": "^2.8.12",
-    "@types/crypto-js": "^4.1.1",
-    "@types/express": "^4.17.13",
-    "@types/jest": "^28.1.6",
-    "@types/jsonwebtoken": "^8.5.8",
-    "@types/luxon": "^3.0.0",
-    "@types/node": "^18.6.2",
-    "@types/nodemailer": "^6.4.5",
-    "axios": "^0.27.2",
-    "ts-jest": "^28.0.7",
-    "typescript": "^4.7.4"
-  },
-  "engines": {
-    "node": "18.x"
-  },
   "dependencies": {
-    "@prisma/client": "^4.1.1",
     "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.0",
     "express": "^4.18.1",
     "fast-glob": "^3.2.11",
     "jsonwebtoken": "^8.5.1",
-    "luxon": "^3.0.1",
-    "nodemailer": "^6.7.7",
+    "luxon": "^2.3.2",
+    "nodemailer": "^6.7.5",
     "pg": "^8.7.3",
-    "prisma": "^4.1.1"
+    "sequelize": "^6.19.0"
   }
 }
