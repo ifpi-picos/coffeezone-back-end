@@ -1,3 +1,3 @@
 node_modules
 .env
-system/modules/db/config/db.json
+dist
