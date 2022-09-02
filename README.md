@@ -1,2 +1,2 @@
 # Coffezone back-end
-Projeto Integrador I e Internet I 2022.1
+Branch destinada a armazenar o código do antigo cofeezone back-end
