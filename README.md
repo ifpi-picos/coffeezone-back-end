@@ -11,4 +11,4 @@ utilizando em tempo real e também um relatório de uso do laboratório. À prop
 * Italo paixão
 
 Projeto para as disciplinas de Projeto integrador II e programação WEB II.
-#### *As branchs "main" e "dev" foram totalmente resetadas para o início das novas atividades das disciplinas, para ver o código antigo vá para a branch "old".* 
+#### *As branches "main" e "dev" foram totalmente resetadas para o início das novas atividades das disciplinas, para ver o código antigo vá para a branch "old".* 
