@@ -2,7 +2,7 @@
   "name": "coffeezone-back-end",
   "version": "1.0.0",
   "description": "* Anthony Irlan  * Gabriel Gomes  * Italo paixão",
-  "main": "server.js",
+  "main": "./src/app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node ./dist/server.js"
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ifpi-picos/coffeezone-back-end/issues"
   },
