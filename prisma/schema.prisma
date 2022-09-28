@@ -1,22 +1,52 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+//Dúvidas: 1 -> como adicionar foto no banco de dados.
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
-  password String @db.Text
+enum Role {
+  Member
+  Visitor
+  Coordinator
+}
+
+enum PermissionStatus {
+  Approved
+  Deined
+  StandingBy
+}
+
+
+model User {
+  id         Int      @id @default(autoincrement())
+  card       String?  @unique
+  email      String   @unique
+  name       String
+  password   String   @db.Text
+  role       Role
   occupation String?
-  }
+  linkedin   String?  @db.Text
+  create_at  DateTime @default(now())
+}
 
+model Reservation {
+  id      Int    @id @default(autoincrement())
+  time    String
+  message String @db.Text
+}
 
+model Permission {
+  id     Int              @id @default(autoincrement())
+  data   DateTime         @default(now())
+  status PermissionStatus
+}
+
+model Relatory {
+  id Int @id @default(autoincrement())
+  data DateTime 
+}
