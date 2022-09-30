@@ -1,4 +1,3 @@
-//Dúvidas: 1 -> como adicionar foto no banco de dados.
 generator client {
   provider = "prisma-client-js"
 }
