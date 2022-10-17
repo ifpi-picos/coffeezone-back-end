@@ -1,15 +1,15 @@
 import UserController from '../controllers/user';
 import validator from 'validator';
 
-interface typeBody {
+interface TypeBody {
   name: string;
   email: string;
   password: string;
   role: string;
-  card: string
+  card?: string
 }
 
-export async function verifyInfosUser(body: typeBody){
+export async function verifyInfosUser(body: TypeBody){
 
   const userController = new UserController();
   const {name, email, password, role, card} = body;
@@ -21,4 +21,3 @@ export async function verifyInfosUser(body: typeBody){
   if(await userController.searchByEmail(email)) return 'Esse email já está sendo usado';
   if(card && await userController.searchByCardId(card)) return 'Esse id de cartão já está sendo usado';
 }
-

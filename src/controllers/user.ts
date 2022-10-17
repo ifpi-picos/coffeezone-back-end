@@ -1,17 +1,19 @@
+import { Role } from "@prisma/client";
 import { prisma } from "../config/database";
 
-interface typeUser{
+interface TypeUser{
   name: string;
   email: string;
   password: string;
-  role: string;
-  card: string;
+  role: Role;
+  card?: string;
 }
 
 export default class UserController {
 
-  async create(user: any){
+  async create(user: TypeUser){
     const {name, email, password, role, card} = user;
+
     try{
       const createUser = await prisma.user.create({
         data: {
