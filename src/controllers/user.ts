@@ -24,7 +24,7 @@ export default class UserController {
           card
         }
       })
-      return createUser;
+      return 'Usuário criado com sucesso!';
     } catch(error) {
       throw new Error("Não foi possível criar usuário.")
     }
