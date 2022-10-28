@@ -1,5 +1,5 @@
 import { Router } from "express";
-import routerUsers from "./user";
+import routerUsers from "./user.route";
 import routerRelatory from "./relatory";
 import routerAuthorization from "./authentication";
 import routerReservation from "./reservation";
