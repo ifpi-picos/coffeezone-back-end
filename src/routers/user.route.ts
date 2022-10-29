@@ -21,7 +21,7 @@ router.get('/all', (req: Request, res: Response)=>{
   });
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response): Promise<void> => {
   try{
     const verifyInfos = await userController.verifyInfosUser(req.body);
     if(verifyInfos) throw new Error(verifyInfos);
@@ -31,18 +31,6 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(400).json(error.message);
   }
 })
-
-// router.post('/login', async (req: Request, res: Response) => {
-//   try{
-//     if(!req.body.email || !req.body.password) throw new Error('Informações faltando')
-//     const searchByEmail = await userController.searchByEmail(req.body.email);
-//     if(!searchByEmail) throw new Error('Email inválido');
-//     if(searchByEmail.password !== req.body.password) throw new Error('Senha incorreta')
-    
-//   } catch(error: any) {
-//     res.status(400).json(error.message);
-//   }
-// })
 
 router.put('/', (req: Request, res: Response) => {
   res.json('usuario alterado');
