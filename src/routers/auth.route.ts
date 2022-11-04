@@ -12,7 +12,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     const equalPassword = authController.verifyPasswordLogin(req.body.password, user);
     if(!equalPassword) throw new Error('Email ou senha incorreto(s).');
     const token = genToken(user);
-    res.cookie('token', token, {maxAge: 604800000, httpOnly: true, secure: false});
+    res.cookie('token', token, {maxAge: 604800000, httpOnly: true, sameSite: 'none', secure: true});
     res.status(200).json('Usuário logado com sucesso');
   } catch (error: any) {
     res.status(400).json(error.message);

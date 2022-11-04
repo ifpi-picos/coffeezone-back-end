@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import routers from "./routers/index";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-// app.use(cookieParse());
+app.use(cookieParser());
 app.use(
   cors({
-    // origin: 'http://localhost:3000',
-    origin: 'https://coffeezonemambee.netlify.app',
+    origin: process.env.URL_SITE,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   })

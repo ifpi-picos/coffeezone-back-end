@@ -1,7 +1,6 @@
 import { searchByEmail } from '../services/user.service';
 import { User } from '@prisma/client';
 import { compareSync } from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 export default class AuthController {
 
