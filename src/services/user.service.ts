@@ -1,11 +1,14 @@
 import { UserRepository } from "../repositories";
 import { User } from "@prisma/client";
 import { ICreateUser } from "../models/ICreateUser";
+import { encryptPassword } from './auth.service';
 
 const userRepository = new UserRepository();
 
 export async function create(user: ICreateUser): Promise<User | undefined> {
-  const createUser = await userRepository.create(user);
+  const userPasswordModify = user;
+  userPasswordModify.password = encryptPassword(user.password);
+  const createUser = await userRepository.create(userPasswordModify);
   if(createUser) return createUser;
   throw new Error('Não foi possível se cadastrar!');
 }

@@ -4,7 +4,15 @@ import routers from "./routers/index";
 
 const app = express();
 
-app.use(cors());
+// app.use(cookieParse());
+app.use(
+  cors({
+    // origin: 'http://localhost:3000',
+    origin: 'https://coffeezonemambee.netlify.app',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  })
+);
 app.use(express.json());
 app.use('/', routers);
 

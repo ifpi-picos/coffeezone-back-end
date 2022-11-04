@@ -22,14 +22,7 @@ router.get('/all', (req: Request, res: Response)=>{
 })
 
 router.post('/', async (req: Request, res: Response): Promise<void> => {
-  try{
-    const verifyInfos = await userController.verifyInfosUser(req.body);
-    if(verifyInfos) throw new Error(verifyInfos);
-    const createUser = await userController.createUser(req.body);
-    res.status(201).json('Usuário criado com sucesso!');
-  } catch(error: any) {
-    res.status(400).json(error.message);
-  }
+  userController.executePost(req, res);
 })
 
 router.put('/', (req: Request, res: Response) => {

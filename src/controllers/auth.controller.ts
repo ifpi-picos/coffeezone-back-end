@@ -14,10 +14,5 @@ export default class AuthController {
     const equalPassword = compareSync(password, user.password);
     return equalPassword;
   }
-  
-  genToken (user: User) {
-    const token = jwt.sign({ id: user.id }, `${process.env.JWT_KEY}`, { expiresIn: '7d' });
-    return token;
-  }
 
 }

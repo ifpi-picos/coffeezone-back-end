@@ -1,6 +1,5 @@
-import { User } from '@prisma/client';
+import { Request, Response } from 'express';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
 import { create, searchByCardId, searchByEmail } from '../services/user.service';
 import { ICreateUser } from '../models/ICreateUser';
 
@@ -15,17 +14,18 @@ export default class UserController {
     if(await searchByEmail(email)) return 'Esse email já está sendo usado';
     if(card && await searchByCardId(card)) return 'Esse id de cartão já está sendo usado';
   }
+
+  //_____________//
+
+  async executePost (req: Request, res: Response): Promise<void>{
+    try{
+      const verifyInfos = await this.verifyInfosUser(req.body);
+      if(verifyInfos) throw new Error(verifyInfos);
+      const createUser = await create(req.body);
+      res.status(201).json('Usuário criado com sucesso!');
+    } catch(error: any) {
+      res.status(400).json(error.message);
+    }
+  }
   
-  encryptPassword (password: string): string {
-    const passwordEncrypted = bcrypt.hashSync(password, 10)
-    return passwordEncrypted;
-  }
-
-  async createUser(user: ICreateUser): Promise<User | undefined> {
-    const userPasswordModify = user;
-    userPasswordModify.password = this.encryptPassword(user.password);
-    const createUser = await create(userPasswordModify);
-    return createUser;
-  }
-
 }
