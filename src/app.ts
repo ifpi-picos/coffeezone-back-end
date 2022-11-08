@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cookieParser());
+app.use(express.json());
 app.use(
   cors({
     origin: process.env.URL_SITE,
@@ -13,7 +14,6 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   })
 );
-app.use(express.json());
 app.use('/', routers);
 
 app.listen(3001, () => {

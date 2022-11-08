@@ -1,24 +1,34 @@
-import { UserRepository } from "../repositories";
 import { User } from "@prisma/client";
 import { ICreateUser } from "../models/ICreateUser";
-import { encryptPassword } from './auth.service';
+import bcrypt from 'bcrypt';
 
-const userRepository = new UserRepository();
+export default class UserService {
+  private userRepository: any;
 
-export async function create(user: ICreateUser): Promise<User | undefined> {
-  const userPasswordModify = user;
-  userPasswordModify.password = encryptPassword(user.password);
-  const createUser = await userRepository.create(userPasswordModify);
-  if(createUser) return createUser;
-  throw new Error('Não foi possível se cadastrar!');
-}
+  constructor(userRepository: any){
+    this.userRepository = userRepository;
+  }
 
-export async function searchByEmail(email: string): Promise<User | null> {
-  const searchEmail = await userRepository.selectOne({email});
-  return searchEmail;
-}
+  encryptPassword (password: string): string {
+    const passwordEncrypted = bcrypt.hashSync(password, 10)
+    return passwordEncrypted;
+  }
 
-export async function searchByCardId(card: string): Promise<User | null>{
-  const searchCardId = await userRepository.selectOne({card});
-  return searchCardId;
+  async create(user: ICreateUser): Promise<User | undefined> {
+    const userPasswordModify = user;
+    userPasswordModify.password = this.encryptPassword(user.password);
+    const createUser = await this.userRepository.create(userPasswordModify);
+    if(createUser) return createUser;
+    throw new Error('Não foi possível se cadastrar!');
+  }
+  
+  async searchByEmail(email: string): Promise<User | null> {
+    const searchEmail = await this.userRepository.selectOne({email});
+    return searchEmail;
+  }
+  
+  async searchByCardId(card: string): Promise<User | null>{
+    const searchCardId = await this.userRepository.selectOne({card});
+    return searchCardId;
+  }
 }

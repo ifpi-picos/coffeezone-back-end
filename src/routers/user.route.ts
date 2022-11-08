@@ -1,15 +1,12 @@
 import { Router, Request, Response } from 'express';
 import UserController from '../controllers/user.controller';
+import auth from '../middleware/auth.middleware';
 
 const router = Router();
 const userController = new UserController();
 
-router.get('/', (req: Request, res: Response)=>{
-  res.json({
-    nome: 'wda',
-    dado2: 'dw',
-    dado3: 'dawdwa'
-  });
+router.get('/', auth, (req: Request, res: Response)=>{
+  res.json(res.locals);
 })
 
 router.get('/all', (req: Request, res: Response)=>{
