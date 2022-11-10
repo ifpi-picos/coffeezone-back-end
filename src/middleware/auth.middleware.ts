@@ -15,9 +15,11 @@ export default function verifyToken(req: Request, res: Response, next: NextFunct
     if(error){
       res.status(400).json('Falha na autenticação')
     }
-    res.locals.userId = decoded.id;
-    const id = res.locals.userId;
-    res.locals.user = await userService.searchById(id);
+    const user = await userService.searchById(decoded.id);
+    res.locals.user = {
+      ...user,
+      id: decoded.id
+    }
     next();
   })
 }

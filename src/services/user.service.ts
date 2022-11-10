@@ -30,6 +30,16 @@ export default class UserService {
     });
     return deleteUser;
   }
+
+  async update(email: string, data: any): Promise<User | null> {
+    const updateUser = await this.userRepository.update({
+      where: {
+        email
+      },
+      data
+    })
+    return updateUser;
+  }
   
   async searchByEmail(email: string): Promise<User | null> {
     const searchEmail = await this.userRepository.selectOne({
@@ -49,10 +59,10 @@ export default class UserService {
     return searchCardId;
   }
 
-  async searchById(id: string): Promise<User | null>{
+  async searchById(id: number): Promise<User | null>{
     const searchId = await this.userRepository.selectOne({
       where: {
-        id: id
+        id
       }, 
       select: {
         card: true,

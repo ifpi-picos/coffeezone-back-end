@@ -15,16 +15,10 @@ export class UserRepository implements IUserRepository {
     return deleteUser;
   }
 
-  // async update(){
-    
-  // }
-
-  // async selectOne(where: Prisma.UserWhereInput): Promise<User | null> {
-  //   const searchUser = await this.repository.findFirst({
-  //     where
-  //   });
-  //   return searchUser;
-  // }
+  async update(conditions: any): Promise<User | null>{
+    const updateUser = await this.repository.update(conditions)
+    return null;    
+  }
 
   async selectOne(conditions: any): Promise<User | null> {
     const searchUser = await this.repository.findFirst(conditions);

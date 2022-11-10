@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 
-export default function authUserType(type: string){
+export default function authUserType(authorizedTypes: string[]){
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      if(res.locals.user.role !== 'Coordinator'){
+      if(!authorizedTypes.includes(res.locals.user.role)){
         throw new Error('Permissão negada')
       }
       next();
     } catch (error: any) {
-      res.status(400).json(error.message)
+      res.status(403).json(error.message)
     } 
   }
 }
