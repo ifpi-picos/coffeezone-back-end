@@ -1,33 +1,29 @@
 import { Router, Request, Response } from 'express';
 import UserController from '../controllers/user.controller';
-import auth from '../middleware/auth.middleware';
+import authToken from '../middleware/auth.middleware';
+import authUserType from '../middleware/authUserType.middleware';
 
 const router = Router();
 const userController = new UserController();
 
-router.get('/', auth, (req: Request, res: Response)=>{
-  res.json(res.locals);
+router.get('/', authToken, (req: Request, res: Response)=>{
+  userController.executeGetUser(req, res);
 })
 
-router.get('/all', (req: Request, res: Response)=>{
-  res.json({
-    user1: {},
-    user2: {},
-    user3: {},
-    user4: {}
-  });
+router.get('/all', authToken, authUserType('Coordinator'), (req: Request, res: Response)=>{
+  userController.executeGetAllUsers(req, res);
 })
 
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   userController.executePost(req, res);
 })
 
-router.put('/', (req: Request, res: Response) => {
+router.put('/', authToken, (req: Request, res: Response) => {
   res.json('usuario alterado');
 })
 
-router.delete('/', (req: Request, res: Response) => {
-  res.json('usuario deletado');
+router.delete('/', authToken, (req: Request, res: Response) => {
+  userController.executeDeleteUser(req, res);
 })
 
 export default router;

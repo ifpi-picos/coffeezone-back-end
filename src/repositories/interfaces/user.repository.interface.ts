@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 
 export interface IUserRepository{
   create(data: User): Promise<User>;
-  // selectOne(where): Promise<User | null>;
+  selectOne(where: any): Promise<User | null>;
   // update(): ;
-  // delete(): ;
+  delete(conditions: any): any;
 }

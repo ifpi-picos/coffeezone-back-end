@@ -18,6 +18,8 @@ export default class UserController {
     if(card && await this.userService.searchByCardId(card)) return 'Esse id de cartão já está sendo usado';
   }
 
+
+
   async executePost (req: Request, res: Response): Promise<void>{
     try{
       const verifyInfos = await this.verifyInfosUser(req.body);
@@ -30,7 +32,32 @@ export default class UserController {
   }
 
   async executeGetUser (req: Request, res: Response): Promise<void>{
-    return;
+    try {
+      const user = await this.userService.searchById(res.locals.userId)
+      if(!user) throw new Error('Usuário não encontrado');
+      res.status(200).json(user);
+    } catch (error: any) {
+      res.status(400).json(error.message);
+    }
   }
-  
+
+  async executeGetAllUsers (req: Request, res: Response): Promise<void>{
+    try {
+      const users = await this.userService.searchAllUsers();
+      res.status(200).json(users);
+    } catch (error: any) {
+      res.status(400).json(error.message);
+    }
+  }
+
+  async executeDeleteUser (req: Request, res: Response): Promise<void>{
+    try {
+      const user = await this.userService.searchById(res.locals.userId)
+      if(!user) throw new Error('Usuário não encontrado');
+      const deleteUser = await this.userService.delete(res.locals.userId);
+      res.status(200).json('Usuário deletado com sucesso');
+    } catch (error: any) {
+      res.status(400).json(error.message);
+    }
+  }
 }

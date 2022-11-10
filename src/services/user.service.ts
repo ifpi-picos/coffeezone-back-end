@@ -21,14 +21,64 @@ export default class UserService {
     if(createUser) return createUser;
     throw new Error('Não foi possível se cadastrar!');
   }
+
+  async delete(id: number): Promise<User | null>{
+    const deleteUser = await this.userRepository.delete({
+      where: {
+        id
+      }
+    });
+    return deleteUser;
+  }
   
   async searchByEmail(email: string): Promise<User | null> {
-    const searchEmail = await this.userRepository.selectOne({email});
+    const searchEmail = await this.userRepository.selectOne({
+      where: {
+        email
+      }
+    });
     return searchEmail;
   }
   
   async searchByCardId(card: string): Promise<User | null>{
-    const searchCardId = await this.userRepository.selectOne({card});
+    const searchCardId = await this.userRepository.selectOne({
+      where: {
+        card
+      }
+    });
     return searchCardId;
+  }
+
+  async searchById(id: string): Promise<User | null>{
+    const searchId = await this.userRepository.selectOne({
+      where: {
+        id: id
+      }, 
+      select: {
+        card: true,
+        email: true,
+        name: true,
+        role: true,
+        occupation: true,
+        linkedin: true,
+        create_at: true
+      }
+    });
+    return searchId;
+  }
+
+  async searchAllUsers(): Promise<any>{
+    const users = await this.userRepository.selectAll({
+      select: {
+        card: true,
+        email: true,
+        name: true,
+        role: true,
+        occupation: true,
+        linkedin: true,
+        create_at: true
+      }
+    });
+    return users;
   }
 }
