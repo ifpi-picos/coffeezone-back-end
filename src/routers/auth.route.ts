@@ -5,7 +5,7 @@ const router = Router();
 const authController = new AuthController();
 
 router.post('/', async (req: Request, res: Response): Promise<void> => {
-  authController.executePost(req, res);
+  authController.executeLogin(req, res);
 })
 
 export default router;

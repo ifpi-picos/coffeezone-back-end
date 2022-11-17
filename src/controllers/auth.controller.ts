@@ -9,7 +9,7 @@ export default class AuthController {
   private userService = new UserService(new UserRepository);
   private authService = new AuthService();
 
-  async executePost (req: Request, res: Response): Promise<void>{
+  async executeLogin (req: Request, res: Response): Promise<void>{
     try {
       const user: User | null = await this.userService.searchByEmail(req.body.email);
       if(!user) throw new Error('Email ou senha incorreto(s).');
@@ -22,7 +22,9 @@ export default class AuthController {
         sameSite: 'none', 
         secure: process.env.COOKIE_SECURE === "true"
       });
-      res.status(200).json('Usuário logado com sucesso');
+      // res.status(200).json('Usuário logado com sucesso');
+      const {name, card, role} = user;
+      res.status(200).json({name, card, role});
     } catch (error: any) {
       res.status(400).json(error.message);
     }
